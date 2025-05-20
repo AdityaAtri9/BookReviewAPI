@@ -49,7 +49,10 @@ npm start
 ### Books
 
 - `POST /books` – Add a book (auth required)
-- `GET /books` – List all books
+- `GET /books` – List all books with pagination  
+  - Query Parameters:
+    - `page` (optional, default: 1)
+    - `limit` (optional, default: 10)
 - `GET /books/:isbn` – Get book by ISBN
 - `GET /books/search?q=Clean` – Search by title or author
 
