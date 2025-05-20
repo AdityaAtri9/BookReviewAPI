@@ -11,10 +11,25 @@ router.post('/', authMiddleware, async (req, res) => {
   res.status(201).json(book);
 });
 
-// GET /books - List all books
+// GET /books - List all books with pagination
 router.get('/', async (req, res) => {
-  const books = await Book.find();
-  res.json(books);
+  const page = parseInt(req.query.page) || 1; // default page 1
+  const limit = parseInt(req.query.limit) || 10; // default 10 books per page
+  const skip = (page - 1) * limit;
+
+  try {
+    const books = await Book.find().skip(skip).limit(limit);
+    const total = await Book.countDocuments();
+
+    res.json({
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      books
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 // GET /search - Search books by title or author (partial and case-insensitive)
